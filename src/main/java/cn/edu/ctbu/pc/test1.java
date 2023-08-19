@@ -1,4 +1,4 @@
-package cn.edu.ctbu.demo02;
+package cn.edu.ctbu.pc;
 
 /**
  * @author 周肆淋
@@ -30,6 +30,26 @@ public class test1 {
                 }
             }
         },"B").start();
+
+        new Thread(()->{
+            for (int i = 0; i <10; i++) {
+                try {
+                    data.increment();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        },"C").start();
+
+        new Thread(()->{
+            for (int i = 0; i <10; i++) {
+                try {
+                    data.decrement();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        },"D").start();
     }
 }
 class Data{
@@ -37,7 +57,9 @@ class Data{
 
     //+1
     public synchronized void increment() throws InterruptedException {
-        if(number!=0){
+        //如果写成if判断，两条以上的线程将会出现问题。
+        //出现虚假唤醒，所以为了避免虚假唤醒问题，我们需要使用while
+        while(number!=0){
             this.wait();
         }
         number++;
@@ -47,7 +69,7 @@ class Data{
 
     //-1
     public synchronized void decrement() throws InterruptedException {
-        if(number==0){
+        while(number==0){
             this.wait();
         }
         number--;
