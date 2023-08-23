@@ -21,6 +21,7 @@ public class ListTest {
     public static void main(String[] args) {
         //写入时复制
         //在写入时避免覆盖
+        List<Integer> list1 = new ArrayList<>();
         List<String> list = new CopyOnWriteArrayList<>();
         for (int i = 0; i < 10; i++) {
             new Thread(()->{
